@@ -44,22 +44,11 @@ itself go in `CARGO_ARGS`.
 # tests
 ./run_all_tests.sh
 
-# tests, against a libxdp built by cc rather than by its Makefile
-CARGO_ARGS=--features=use_cc_build ./run_all_tests.sh
-
 # examples
 cargo build --examples --release
 sudo target/release/examples/hello_xdp
 sudo target/release/examples/dev1_to_dev2 -- [FLAGS] [OPTIONS]
 ```
-
-### Features
-
-`use_cc_build` forwards to the `libxdp-sys` feature of the same name.
-It builds the vendored libxdp with the `cc` crate rather than by
-running its Makefile, so the build writes only to `OUT_DIR` and is
-configured up front instead of by whatever `configure` finds on the
-host.
 
 ### Compatibility
 
