@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+## [0.11.0-gen0sec.1]
+
+gen0sec build of upstream 0.11.0, for the gen0sec registry. The code in `src` is unchanged.
+
+### Changed
+
+- The `libxdp-sys` requirement is `0.2.2` rather than `0.2.4`. Upstream 0.2.4 pins `libbpf-sys =1.5.1`, which cannot
+  link alongside `libbpf-sys` 1.7. Every libxdp symbol xsk-rs uses exists in the 0.2.2 bindings.
+- Package metadata for the gen0sec registry: `publish`, `repository`, `categories`, and `links` with an empty build
+  script, which the registry requires.
+- CI no longer runs the `use_cc_build` test leg, and the `test` job runs on Ubicloud.
+
+### Removed
+
+- The `use_cc_build` feature. It forwarded to a `libxdp-sys` feature that 0.2.2 does not have, and nothing in the crate
+  used it.
+
 ## [0.11.0] - 2026-08-28
 
 ## Fixed
