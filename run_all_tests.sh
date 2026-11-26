@@ -14,12 +14,7 @@
 #
 # work as they would under `cargo test`. Arguments for cargo itself go
 # in CARGO_ARGS, which both build steps below have to see so that the
-# binaries that get run are the ones that were just built, so
-#
-#     CARGO_ARGS=--features=use_cc_build ./run_all_tests.sh
-#
-# runs the suite against a libxdp built by cc rather than by its
-# Makefile.
+# binaries that get run are the ones that were just built.
 
 set -uo pipefail
 
