@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, 'release/**' ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, 'release/**' ]
   workflow_dispatch:
 
 env:
@@ -13,7 +13,7 @@ env:
 jobs:
   check:
     name: Check
-    runs-on: ubuntu-latest
+    runs-on: ubicloud-standard-2
     steps:
       - uses: actions/checkout@v4
       - run: |
@@ -23,20 +23,28 @@ jobs:
       - run: cargo check
 
   test:
-    name: Test
+    name: Test (libxdp-sys ${{ matrix.libxdp-sys }})
     runs-on: ubicloud-standard-2
+    strategy:
+      fail-fast: false
+      matrix:
+        # The floor is the release gen0sec consumers lock alongside
+        # libbpf-sys 1.7, so it is tested as well as the newest.
+        libxdp-sys: [newest, 0.2.2+1.5.5]
     steps:
       - uses: actions/checkout@v4
       - run: |
           sudo apt update
           sudo apt install clang llvm gcc-multilib libelf-dev libpcap-dev build-essential m4
       - uses: dtolnay/rust-toolchain@stable
+      - if: matrix.libxdp-sys != 'newest'
+        run: cargo update -p libxdp-sys --precise "${{ matrix.libxdp-sys }}"
       - run: ./run_all_tests.sh
       - run: cargo test --doc
 
   miri:
     name: Miri
-    runs-on: ubuntu-latest
+    runs-on: ubicloud-standard-2
     steps:
       - uses: actions/checkout@v4
       - run: |
@@ -49,7 +57,7 @@ jobs:
 
   fmt:
     name: Rustfmt
-    runs-on: ubuntu-latest
+    runs-on: ubicloud-standard-2
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
@@ -59,7 +67,7 @@ jobs:
 
   clippy:
     name: Clippy
-    runs-on: ubuntu-latest
+    runs-on: ubicloud-standard-2
     steps:
       - uses: actions/checkout@v4
       - run: |
